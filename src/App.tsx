@@ -30,6 +30,7 @@ function Workout(props){
         <StyledWorkout>
             <WorkoutPair>
                 <ExerciseBubble name={"pull"} sets={3} reps={10}/>
+                <ExerciseBubble name={"squat"} sets={3} reps={10}/>
             </WorkoutPair>
             <WorkoutPair>
             </WorkoutPair>
@@ -48,13 +49,21 @@ function Stretch(props) {
 
 function ExerciseBubble(props){
     const [tier, setTier] = useState(0);
+    const [completedReps, setCompletedReps] = useState(0);
+    const bubbleExercises = exercises[props.name];
     return (
         <div>
             <h3>{props.name}</h3>
             <StyledExerciseBubble>
-                <button onClick={() => setTier(tier - 1)}>-</button>
-                current exercise: {exercises[props.name][tier].name}
-                <button onClick={() => setTier(tier + 1)}>+</button>
+                current exercise: {bubbleExercises[tier].name}
+                form description: {bubbleExercises[tier].form}
+                media: {bubbleExercises[tier].vidLink}
+
+                sets: {bubbleExercises[tier].sets}
+                reps: {bubbleExercises[tier].reps}
+
+                <button onClick={() => setTier(tier < Object.keys(bubbleExercises).length - 1 ? tier + 1 : tier)}>+</button>
+                <button onClick={() => setTier(tier > 0 ? tier - 1 : 0)}>-</button>
             </StyledExerciseBubble>
         </div>
     )
