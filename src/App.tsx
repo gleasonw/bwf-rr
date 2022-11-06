@@ -28,13 +28,32 @@ function WarmUp(props) {
 function Workout(props){
     return (
         <StyledWorkout>
+            <div>
+                <h3>First pair</h3>
+                <WorkoutPair>
+                    <ExerciseBubble name={"pull"}/>
+                    <ExerciseBubble name={"squat"}/>
+                </WorkoutPair>
+            </div>
+            <div>
+                <h3>Second pair</h3>
+                <WorkoutPair>
+                    <ExerciseBubble name={"dip"}/>
+                    <ExerciseBubble name={"hinge"}/>
+                </WorkoutPair>
+            </div>
+            <div>
+                <h3>Third pair</h3>
+                <WorkoutPair>
+                    <ExerciseBubble name={"row"}/>
+                    <ExerciseBubble name={"push"}/>
+                </WorkoutPair>
+            </div>
             <WorkoutPair>
-                <ExerciseBubble name={"pull"} sets={3} reps={10}/>
-                <ExerciseBubble name={"squat"} sets={3} reps={10}/>
-            </WorkoutPair>
-            <WorkoutPair>
-            </WorkoutPair>
-            <WorkoutPair>
+                <h3>Core triplet</h3>
+                <ExerciseBubble name={"core-anti-extension"}/>
+                <ExerciseBubble name={"core-anti-rotation"}/>
+                <ExerciseBubble name={"core-extension"}/>
             </WorkoutPair>
         </StyledWorkout>
     )
@@ -50,22 +69,30 @@ function Stretch(props) {
 function ExerciseBubble(props){
     const [tier, setTier] = useState(0);
     const [completedReps, setCompletedReps] = useState(0);
-    const bubbleExercises = exercises[props.name];
+    const bubbleExercises = exercises[props.name].progression;
+    const repRange = exercises[props.name].repRange
+    const sets = exercises[props.name].sets
     return (
-        <div>
-            <h3>{props.name}</h3>
-            <StyledExerciseBubble>
+        <StyledExerciseBubble>
+            <p>
                 current exercise: {bubbleExercises[tier].name}
-                form description: {bubbleExercises[tier].form}
+            </p>
+            <p>
+                form description:
+                <ul>
+                    {bubbleExercises[tier].form.map((form) => <li>{form}</li>)}
+                </ul>
+            </p>
+            <p>
                 media: {bubbleExercises[tier].vidLink}
+            </p>
 
-                sets: {bubbleExercises[tier].sets}
-                reps: {bubbleExercises[tier].reps}
+            sets: {sets}
+            reps: {repRange}
 
-                <button onClick={() => setTier(tier < Object.keys(bubbleExercises).length - 1 ? tier + 1 : tier)}>+</button>
-                <button onClick={() => setTier(tier > 0 ? tier - 1 : 0)}>-</button>
-            </StyledExerciseBubble>
-        </div>
+            <button onClick={() => setTier(tier < Object.keys(bubbleExercises).length - 1 ? tier + 1 : tier)}>+</button>
+            <button onClick={() => setTier(tier > 0 ? tier - 1 : 0)}>-</button>
+        </StyledExerciseBubble>
     )
 }
 
@@ -87,7 +114,6 @@ const StyledWorkout = styled.div`
     margin: 10px;
     display: flex;
     flex-direction: row;
-    width: 100%;
     align-items: center;
     flex-wrap: wrap;
 `;
@@ -103,9 +129,8 @@ const StyledExerciseBubble = styled.div`
 `;
 
 const WorkoutPair = styled(StyledWorkout)`
-    flex-direction: column !important;
     background-color: ${props => props.bColor} 
     border: 1px solid #e8e8e8;
     border-radius: 5px;
-    width: 100%;
+    border: 1px solid #e8e8e8;
 `;
