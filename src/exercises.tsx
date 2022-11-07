@@ -28,8 +28,14 @@ export const exercises = {
         progression: [
             {
                 name: "scapular pull",
-                form: [],
-                vidLink: 'https://www.youtube.com/watch?t=1m21s&v=FgYoc4O-cio&feature=youtu.be',
+                form: [
+                    'Elbows should stay straight',
+                    'Your back will arch more as you get stronger',
+                    'These should be performed with a pause at the "top". Squeeze your shoulders, hold it for 3-5s then release into a dead hang under control',
+                    'If you can\'t pull out of the dead hang at all, consider using bands or your feet to assist you until you gain the necessary strength.'
+                ],
+                vidLink: 'FgYoc4O-cio',
+                time: '81'
             },
             {
                 name: "arch hangs",
