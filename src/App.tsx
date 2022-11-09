@@ -25,10 +25,27 @@ function Workout(props){
 function ExerciseBubble(props){
     const [categoryIndex, setCategoryIndex] = useState(0);
     const [tier, setTier] = useState(0);
-    const [completedReps, setCompletedReps] = useState(0);
+    const [repsCompletedForSet, setRepsCompletedForSet] = useState(0);
+    const [totalRepsCompleted, setTotalRepsCompleted] = useState(0);
+    const [setNumber, setSetNumber] = useState(1);
     const bubbleExercises = exercises[props.name].progression;
     const repRange = exercises[props.name].repRange
-    const sets = exercises[props.name].sets
+    const totalSetsForNextTier = exercises[props.name].sets
+
+    function handleRepChange(reps){
+        if(reps % repRange[0] + tier === 0) {
+            setTotalRepsCompleted(totalRepsCompleted + reps);
+            setRepsCompletedForSet(0);
+            if(setNumber === totalSetsForNextTier){
+                setSetNumber(1);
+                setTier(tier + 1);
+                setCategoryIndex(categoryIndex + 1);
+            }
+            return;
+        }
+        setRepsCompletedForSet(reps);
+    }
+
     return (
         <div>
             <h1>{bubbleExercises[categoryIndex].name}</h1>
@@ -41,28 +58,57 @@ function ExerciseBubble(props){
                 params={`start=${bubbleExercises[categoryIndex].time}`}
             />
             <StyledRepRow>
-                <div>
-                    <h3>Reps completed</h3>
-                    <StyledRepsText>
-                        {completedReps}
-                    </StyledRepsText>
-                    <div>
-                        <StyledButton onClick={() => setCompletedReps(completedReps - 1)}>-</StyledButton>
-                        <StyledButton onClick={() => setCompletedReps(completedReps + 1)}>+</StyledButton>
-                    </div>
-                </div>
-                <h1>Set {Math.floor(completedReps / repRange[0] + tier) + 1}</h1>
-
-                <div>
-                    <h3>Target reps</h3>
-                    <StyledRepsText>
-                        {repRange[0] + tier}
-                    </StyledRepsText>
-                </div>
-
+                <RepCounter
+                    completedReps={repsCompletedForSet}
+                    totalRepsCompleted={totalRepsCompleted}
+                    onAddClick={() => handleRepChange(repsCompletedForSet + 1)}
+                    onRemoveClick={() => handleRepChange(repsCompletedForSet - 1)}
+                />
+                <SetViewer
+                    completedReps={repsCompletedForSet}
+                    setNumber={setNumber}
+                />
+                <TargetReps target={repRange[0] + tier}/>
             </StyledRepRow>
         </div>
 
+    )
+}
+
+function RepCounter(props){
+    return(
+        <div>
+            <h3>Reps for set</h3>
+            <div>
+                Total reps for exercise: {props.totalRepsCompleted}
+            </div>
+            <StyledRepsText>
+                {props.completedReps}
+            </StyledRepsText>
+            <div>
+                <StyledButton onClick={() => props.onRemoveClick()}>-</StyledButton>
+                <StyledButton onClick={() => props.onAddClick()}>+</StyledButton>
+            </div>
+        </div>
+    )
+}
+
+function SetViewer(props){
+    return(
+        <div>
+            <h1>Set {props.setNumber}</h1>
+        </div>
+    )
+}
+
+function TargetReps(props){
+    return(
+        <div>
+            <h3>Target reps:</h3>
+            <StyledRepsText>
+                {props.target}
+            </StyledRepsText>
+        </div>
     )
 }
 
